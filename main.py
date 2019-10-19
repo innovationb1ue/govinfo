@@ -141,24 +141,27 @@ class govinfo:
         try:
             if resp:
                 content = resp.content.decode('utf-8')
-                # title actually can be find in td, class:dbiaoti
+                soup = bs(content, 'lxml')
+                title_tag = soup.find('td', attrs={'class':'dbiaoti'})
+                if title_tag:
+                    title = title_tag.text
+                else:
+                    title = ''
+
                 infoTags = re.findall('OpenWindow.document.write\("(.*?)"\)', content)
                 if infoTags:
-                    title = infoTags[0]
                     body = infoTags[2]
                     return[title, body]
                 else:
-                    soup = bs(content, 'lxml')
-                    article = soup.find('td', attrs={'class':'zw_link'})
-                    if article:
-                        article1 = article.text
-                        print('article1=', article1)
+                    article_tag = soup.find('td', attrs={'class':'zw_link'})
+                    if article_tag:
+                        article1 = article_tag.text
                         if not article1:
                             with open('./postFixtest.txt', 'a') as f:
                                 f.write(url)
                                 f.write('\n')
                             try:
-                                imgPostfix = article.img['src']
+                                imgPostfix = article_tag.img['src']
                                 print('postfix=', imgPostfix)
                                 imgContent = self.s.get(url.replace(url.split('/')[-1], imgPostfix), timeout=5).content
                                 with open('./Imgs/%s.png'%time.time(), 'wb') as f:
