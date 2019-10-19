@@ -6,12 +6,11 @@ from multiprocessing import Pool
 import os
 import re
 import csv
-import time
 
 
 class govinfo:
     def __init__(self):
-        self.s = proxy.MyRequests()
+        self.s = proxy.my_requests()
         self.catalog2=0
         self.Headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36'}
 
@@ -19,7 +18,7 @@ class govinfo:
     def start(self):
         # self.multi_crawl_catalog(1, 23314, 363, worker=16, timeout=12)
         # self.get_article_info('http://govinfo.nlc.cn/gtfz/xxgk/gwyzcbm/jyb/201904/t20190404_22317377.shtml?classid=596;626#')
-        self.multi_crawl_article(worker=16)
+        self.multi_crawl_article()
 
     # subprocess generator for list page
     def multi_crawl_catalog(self, startpage, endpage, catalog2,  worker=4, timeout=8):
@@ -90,12 +89,9 @@ class govinfo:
         else:
             wasted = set()
         urlList = list(set(urlList).symmetric_difference(set(wasted)))
-        print('total=', len(urlList))
         flag = len(urlList) // worker
-        print('worker = ', worker)
         for i in range(worker):
             task = urlList[i*flag: (i+1)*flag]
-            print(len(task))
             p.apply_async(self.crawl_article, args=(task,))
         p.close()
         p.join()
@@ -103,33 +99,16 @@ class govinfo:
     # subprocess function crawl article (components function)
     def crawl_article(self, urlList):
         for url in urlList:
-            try:
-                title, body = self.get_article_info(url, timeout=8)
-                # check whether the article info is correct or not
-                if [title, body] == ['', '']:
-                    print(url)
-                    continue
-                elif [title, body] == [1, 1]:
-                    with open('./wasted_urls_%s.txt' % self.catalog2, 'a', encoding='utf-8', errors='ignore') as f:
-                        f.write(url)
-                        f.write('\n')
-                    continue
-                with open('./articles_govinfo_%s.csv'%self.catalog2, 'a', encoding='utf-8',errors='ignore', newline='') as f:
-                    print(title)
-                    writer = csv.writer(f)
-                    writer.writerow([title, body])
-                with open('./wasted_urls_%s.txt'%self.catalog2, 'a', encoding='utf-8', errors='ignore') as f:
-                    f.write(url)
-                    f.write('\n')
-            except Exception as e:
-                print(e)
-                with open('./Exception.txt', 'a') as f:
-                    f.write(str(e))
-                    f.write('\n')
-
+            title, body = self.get_article_info(url, timeout=8)
+            with open('./articles_govinfo_%s.csv'%self.catalog2, 'a', encoding='utf-8',errors='ignore') as f:
+                writer = csv.writer(f)
+                writer.writerow([title, body])
+            with open('./wasted_urls_%s.txt'%self.catalog2, 'a', encoding='utf-8', errors='ignore') as f:
+                f.write(url)
+                f.write('\n')
 
     # get specific page details(component function)
-    def get_article_info(self, url:str, timeout=4):
+    def get_article_info(self, url, timeout=4):
         try:
             resp = self.s.get(url, timeout=timeout, retry=True, retryMax=5)
         except Exception as e:
@@ -141,47 +120,14 @@ class govinfo:
         try:
             if resp:
                 content = resp.content.decode('utf-8')
-                # title actually can be find in td, class:dbiaoti
                 infoTags = re.findall('OpenWindow.document.write\("(.*?)"\)', content)
                 if infoTags:
                     title = infoTags[0]
                     body = infoTags[2]
+                    print(title)
                     return[title, body]
                 else:
-                    soup = bs(content, 'lxml')
-                    article = soup.find('td', attrs={'class':'zw_link'})
-                    if article:
-                        article1 = article.text
-                        print('article1=', article1)
-                        if not article1:
-                            with open('./postFixtest.txt', 'a') as f:
-                                f.write(url)
-                                f.write('\n')
-                            try:
-                                imgPostfix = article.img['src']
-                                print('postfix=', imgPostfix)
-                                imgContent = self.s.get(url.replace(url.split('/')[-1], imgPostfix), timeout=5).content
-                                with open('./Imgs/%s.png'%time.time(), 'wb') as f:
-                                    f.write(imgContent)
-                                return [1, 1]
-                            except Exception as e:
-                                with open('./Exception.txt', 'a') as f:
-                                    f.write(str(e))
-                                    f.write('\n')
-                                return ['', '']
-                        else:
-                            print(article1[:40])
-                            return ['', article1]
-                    else:
-                        article = soup.find('td', attrs={'class':'bg_link'})
-                        if article:
-                            article1 = article.text
-                            if article1:
-                                return ['', article1]
-                            else:
-                                return [1, 1]
-                        else:
-                            return [1, 1]
+                    return ['', '']
             else:
                 return ['', '']
         except Exception as e:
