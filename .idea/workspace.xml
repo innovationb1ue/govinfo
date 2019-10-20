@@ -2,8 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5321f26f-eebf-4764-93f8-a412fe96f0c4" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/devide_csv.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/redis-server.exe" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wasted_urls_0.txt" beforeDir="false" afterPath="$PROJECT_DIR$/wasted_urls_0.txt" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -46,7 +49,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.get_count">
+  <component name="RunManager" selected="Python.main">
     <configuration name="get_count" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="govinfo" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -93,8 +96,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.get_count" />
         <item itemvalue="Python.main" />
+        <item itemvalue="Python.get_count" />
       </list>
     </recent_temporary>
   </component>
@@ -123,6 +126,9 @@
       <workItem from="1571488996351" duration="1192000" />
       <workItem from="1571490243077" duration="207000" />
       <workItem from="1571494656487" duration="1666000" />
+      <workItem from="1571537466017" duration="781000" />
+      <workItem from="1571546987558" duration="724000" />
+      <workItem from="1571567960942" duration="2609000" />
     </task>
     <servers />
   </component>
@@ -143,7 +149,7 @@
     </option>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/govinfo$main.coverage" NAME="main Coverage Results" MODIFIED="1571323489851" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/govinfo$main.coverage" NAME="main Coverage Results" MODIFIED="1571547288577" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/govinfo$get_count.coverage" NAME="get_count Coverage Results" MODIFIED="1571389293184" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

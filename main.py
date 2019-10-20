@@ -17,8 +17,8 @@ class govinfo:
 
     # start crawling
     def start(self):
-        # self.multi_crawl_catalog(1, 23314, 363, worker=16, timeout=12)
-        # self.get_article_info('http://govinfo.nlc.cn/gtfz/xxgk/gwyzcbm/jyb/201904/t20190404_22317377.shtml?classid=596;626#')
+        self.catalog2 = 416
+        self.multi_crawl_catalog(1, 37080, self.catalog2, worker=16, timeout=12)
         self.multi_crawl_article(worker=16)
 
     # subprocess generator for list page
@@ -52,7 +52,7 @@ class govinfo:
                     soup = bs(content, 'lxml')
                     tds = soup.find_all('a', attrs={'target':'_blank'})
                     urls = [i['href'] for i in tds[1:]]
-                    with open('./urls.txt', 'a') as f:
+                    with open('./urls_%s.txt'%self.catalog2, 'a') as f:
                         for url in urls:
                             f.write(url)
                             f.write('\n')
@@ -106,10 +106,7 @@ class govinfo:
             try:
                 title, body = self.get_article_info(url, timeout=8)
                 # check whether the article info is correct or not
-                if [title, body] == ['', '']:
-                    print(url)
-                    continue
-                elif [title, body] == [1, 1]:
+                if [title, body] == [1, 1]:
                     with open('./wasted_urls_%s.txt' % self.catalog2, 'a', encoding='utf-8', errors='ignore') as f:
                         f.write(url)
                         f.write('\n')
@@ -154,37 +151,23 @@ class govinfo:
                     return[title, body]
                 else:
                     article_tag = soup.find('td', attrs={'class':'zw_link'})
+                    # article method 1
                     if article_tag:
                         article1 = article_tag.text
-                        if not article1:
-                            with open('./postFixtest.txt', 'a') as f:
-                                f.write(url)
-                                f.write('\n')
-                            try:
-                                imgPostfix = article_tag.img['src']
-                                print('postfix=', imgPostfix)
-                                imgContent = self.s.get(url.replace(url.split('/')[-1], imgPostfix), timeout=5).content
-                                with open('./Imgs/%s.png'%time.time(), 'wb') as f:
-                                    f.write(imgContent)
-                                return [1, 1]
-                            except Exception as e:
-                                with open('./Exception.txt', 'a') as f:
-                                    f.write(str(e))
-                                    f.write('\n')
-                                return ['', '']
-                        else:
-                            print(article1[:40])
-                            return ['', article1]
+                        if article1:
+                            return [title, article1]
+                    # article method 2
+                    article = soup.find('td', attrs={'class':'bg_link'})
+                    if article:
+                        article1 = article.text
+                        if article1:
+                            return [title, article1]
+                    # return False condition
                     else:
-                        article = soup.find('td', attrs={'class':'bg_link'})
-                        if article:
-                            article1 = article.text
-                            if article1:
-                                return ['', article1]
-                            else:
-                                return [1, 1]
-                        else:
-                            return [1, 1]
+                        with open('./fail.txt','a' ) as f:
+                            f.write(url)
+                            f.write('\n')
+                        return [1, 1]
             else:
                 return ['', '']
         except Exception as e:
