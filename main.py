@@ -1,12 +1,13 @@
-import requests
 import proxy
 from bs4 import BeautifulSoup as bs
-import logging
 from multiprocessing import Pool
 import os
 import re
 import csv
 import time
+import xlrd
+import math
+
 
 
 class govinfo:
@@ -17,25 +18,32 @@ class govinfo:
 
     # start crawling
     def start(self):
-        self.catalog2 = 416
-        self.multi_crawl_catalog(1, 37080, self.catalog2, worker=16, timeout=12)
-        self.multi_crawl_article(worker=16)
+        sheet = xlrd.open_workbook('./govinfo.xlsx').sheet_by_index(0)
+        startrow = 3
+        endrow = 8 # MAX = 22
+        indexes = sheet.col_values(2)[startrow-1:endrow]
+        indexes = [int(i) for i in indexes]
+        pages = sheet.col_values(3)[startrow-1:endrow]
+        pages = [math.floor(page) for page in pages if page != '']
+        for page, index in zip(pages, indexes):
+            self.catalog2 = index
+            self.multi_crawl_catalog(1, page, worker=16, timeout=12)
+            self.multi_crawl_article(worker=16)
 
     # subprocess generator for list page
-    def multi_crawl_catalog(self, startpage, endpage, catalog2,  worker=4, timeout=8):
-        self.catalog2 = catalog2
+    def multi_crawl_catalog(self, startpage, endpage,  worker=4, timeout=8):
         p = Pool(worker)
         flag = (endpage-startpage+1) // worker
         # check wasted pages
-        if os.path.exists('./wasted_%s.txt'%catalog2):
-            with open('./wasted_%s.txt'%catalog2, 'r') as f:
+        if os.path.exists('./wasted_%s.txt'%self.catalog2):
+            with open('./wasted_%s.txt'%self.catalog2, 'r') as f:
                 wastedPage = f.read().split('\n')
         else:
             wastedPage = []
         for i in range(worker):
             taskPages = [str(i) for i in range(startpage + i * flag, startpage + (i+1) * flag + 1) if str(i) not in wastedPage]
             p.apply_async(self.crawl_catalog, args=(taskPages,
-                                                    catalog2,
+                                                    self.catalog2,
                                                     timeout
                                                     )
                           )
@@ -56,7 +64,7 @@ class govinfo:
                         for url in urls:
                             f.write(url)
                             f.write('\n')
-                    with open('./wasted_%s.txt'%catalog2, 'a') as f:
+                    with open('./wasted_%s.txt'%self.catalog2, 'a') as f:
                         f.write(str(pageindex))
                         f.write('\n')
             except Exception as e:
@@ -82,7 +90,7 @@ class govinfo:
 
     def multi_crawl_article(self, worker=4):
         p = Pool(worker)
-        with open('./urls.txt', 'r') as f:
+        with open('./urls_%s.txt'%self.catalog2, 'r') as f:
             urlList = f.read().split('\n')
         if os.path.exists('./wasted_urls_%s.txt'%self.catalog2):
             with open('./wasted_urls_%s.txt'%self.catalog2, 'r') as f:
@@ -144,32 +152,51 @@ class govinfo:
                     title = title_tag.text
                 else:
                     title = ''
-
+                # method 1
                 infoTags = re.findall('OpenWindow.document.write\("(.*?)"\)', content)
                 if infoTags:
                     body = infoTags[2]
                     return[title, body]
-                else:
-                    article_tag = soup.find('td', attrs={'class':'zw_link'})
-                    # article method 1
-                    if article_tag:
-                        article1 = article_tag.text
-                        if article1:
-                            return [title, article1]
-                    # article method 2
-                    article = soup.find('td', attrs={'class':'bg_link'})
-                    if article:
-                        article1 = article.text
-                        if article1:
-                            return [title, article1]
-                    # return False condition
-                    else:
-                        with open('./fail.txt','a' ) as f:
+
+                # method 2
+                article_tag = soup.find('td', attrs={'class':'zw_link'})
+                if article_tag:
+                    if article_tag.img:
+                        img_tag_list = article_tag.find_all('img')
+                        for img_tag in img_tag_list:
+                            postfix = img_tag['src']
+                            bimg = self.s.get(url.replace(url.split('/')[-1], postfix)).content
+                            with open('./Imgs/%s.png' % time.time(), 'wb') as f:
+                                f.write(bimg)
+                    article1 = article_tag.text
+                    if article1:
+                        return [title, article1]
+
+                # method 3
+                article = soup.find('td', attrs={'class':'bg_link'})
+                if article:
+                    if article.img:
+                        with open('./ImgUrls.txt', 'a') as f:
                             f.write(url)
                             f.write('\n')
-                        return [1, 1]
+                        img_tag_list = article.find_all('img')
+                        for img_tag in img_tag_list:
+                            postfix = img_tag['src']
+                            bimg = self.s.get(url.replace(url.split('/')[-1], postfix)).content
+                            with open('./Imgs/%s.png' % time.time(), 'wb') as f:
+                                f.write(bimg)
+                    article1 = article.text
+                    if article1:
+                        return [title, article1]
+
+                # return False condition
+                else:
+                    with open('./fail.txt','a' ) as f:
+                        f.write(url)
+                        f.write('\n')
+                    return [1, 1]
             else:
-                return ['', '']
+                return [1, 1]
         except Exception as e:
             print(e)
             with open('Exception.txt', 'a') as f:

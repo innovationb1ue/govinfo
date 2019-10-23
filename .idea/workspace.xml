@@ -2,11 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5321f26f-eebf-4764-93f8-a412fe96f0c4" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/devide_csv.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/redis-server.exe" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/display.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/get_class_total_num.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/wasted_urls_0.txt" beforeDir="false" afterPath="$PROJECT_DIR$/wasted_urls_0.txt" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -50,6 +49,28 @@
     </option>
   </component>
   <component name="RunManager" selected="Python.main">
+    <configuration name="get_class_total_num" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="govinfo" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/get_class_total_num.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="get_count" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="govinfo" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -97,6 +118,7 @@
     <recent_temporary>
       <list>
         <item itemvalue="Python.main" />
+        <item itemvalue="Python.get_class_total_num" />
         <item itemvalue="Python.get_count" />
       </list>
     </recent_temporary>
@@ -128,7 +150,15 @@
       <workItem from="1571494656487" duration="1666000" />
       <workItem from="1571537466017" duration="781000" />
       <workItem from="1571546987558" duration="724000" />
-      <workItem from="1571567960942" duration="2609000" />
+      <workItem from="1571567960942" duration="3226000" />
+      <workItem from="1571584546615" duration="1307000" />
+      <workItem from="1571623097223" duration="4111000" />
+      <workItem from="1571648980044" duration="956000" />
+      <workItem from="1571665117854" duration="943000" />
+      <workItem from="1571667226231" duration="61000" />
+      <workItem from="1571732834975" duration="630000" />
+      <workItem from="1571798552774" duration="908000" />
+      <workItem from="1571841430990" duration="2000" />
     </task>
     <servers />
   </component>
@@ -149,7 +179,8 @@
     </option>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/govinfo$main.coverage" NAME="main Coverage Results" MODIFIED="1571547288577" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/govinfo$main.coverage" NAME="main Coverage Results" MODIFIED="1571631869129" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/govinfo$get_class_total_num.coverage" NAME="get_class_total_num Coverage Results" MODIFIED="1571630697326" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/govinfo$get_count.coverage" NAME="get_count Coverage Results" MODIFIED="1571389293184" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
